@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AT A GLANCE – Interactive Language Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --main-blue: #1a263c;
+  --black-strip: #0d0d0d;
+  --card-bg: #fff;
+  --shadow: 0 6px 28px rgba(30,40,60,0.17), 0 2px 6px rgba(0,0,0,.10);
+  --card-radius: 20px;
+  --footer-height: 64px;
+}
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: #f6f8fa;
+  box-sizing: border-box;
+  min-height: 100vh;
+  padding-bottom: var(--footer-height);
+}
+.container {
+  text-align: center;
+  padding-top: 42px;
+}
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--main-blue);
+  margin-bottom: 3px;
+}
+.subtitle {
+  font-size: 1.15rem;
+  color: #42587b;
+  font-weight: 500;
+  margin-bottom: 3px;
+}
+.author {
+  font-size: 1.05rem;
+  color: #7c91b5;
+  font-weight: 400;
+  margin-bottom: 26px;
+}
+.carousel-row {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 56px;
+  flex-wrap: wrap;
+}
+.card {
+  min-width: 170px;
+  max-width: 210px;
+  height: 170px;
+  background: var(--card-bg);
+  border-radius: var(--card-radius);
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.22rem;
+  font-weight: 600;
+  color: var(--main-blue);
+  transition: transform 0.14s, box-shadow 0.18s;
+  cursor: pointer;
+  padding: 18px;
+  text-align: center;
+}
+.card:hover {
+  transform: scale(1.032);
+  box-shadow: 0 12px 36px rgba(30,40,60,0.29);
+  background: #f4fcf9;
+}
+.slide {
+  display: none;
+  padding: 40px 10px 0 10px;
+  text-align: center;
+}
+.slide.active {
+  display: block;
+}
+input {
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+button {
+  padding: 10px 16px;
+  margin-left: 8px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: none;
+  background: var(--main-blue);
+  color: white;
+  cursor: pointer;
+}
+.results {
+  margin-top: 20px;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #333;
+  text-align: left;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.results strong {
+  color: #264fe9;
+}
+.back-btn {
+  margin-top: 20px;
+  background: #ccc;
+}
+/* Black strip always at bottom */
+.black-strip {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  height: var(--footer-height);
+  background: var(--black-strip);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 40px;
+  font-size: 1.23rem;
+  color: #fff;
+  box-shadow: 0 -2px 14px rgba(0,0,0,0.18);
+  border-radius: 32px 32px 0 0;
+  z-index: 400;
+  font-weight: 600;
+}
+.black-strip .arrow {
+  font-size: 2.25rem;
+  font-weight: 600;
+  margin-right: 14px;
+  transition: color 0.17s;
+  cursor: pointer;
+}
+.black-strip .arrow:hover {
+  color: #63e3c0;
+}
+.black-strip .back-label {
+  font-size: 1.17rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-left: 6px;
+}
+@media (max-width: 1100px) {
+  .carousel-row { gap: 17px;}
+  .card { min-width: 132px; height: 128px; font-size: 1.01rem;}
+}
+@media (max-width: 650px) {
+  .carousel-row { gap: 8px;}
+  .card { min-width: 95px; height: 90px; font-size: 0.8rem;}
+  .container { padding-top: 12px;}
+  .black-strip { font-size: 1rem; padding: 0 12px;}
+  .black-strip .arrow { font-size: 2.05rem;}
+  .black-strip .back-label { font-size: 1.05rem;}
+}
+</style>
+</head>
+<body>
+<div class="container" id="main-menu">
+  <div class="title">AT A GLANCE</div>
+  <div class="subtitle">Interactive Language Generator</div>
+  <div class="author">Majid Nashtai</div>
+  <div class="carousel-row">
+    <div class="card" data-slide="vocab-slide">Vocabulary</div>
+    <div class="card" data-slide="expr-slide">Expressions</div>
+    <div class="card" data-slide="sent-slide">Sentences</div>
+    <div class="card" data-slide="para-slide">Paragraphs</div>
+    <div class="card" data-slide="list-slide">Lists</div>
+  </div>
+</div>
+
+<!-- Vocabulary Slide -->
+<div class="slide" id="vocab-slide">
+  <h2>Vocabulary</h2>
+  <input type="text" id="vocab-input" placeholder="Type a word">
+  <button onclick="getSynonyms('vocab')">Get Synonyms</button>
+  <div class="results" id="vocab-results"></div>
+</div>
+
+<!-- Other slides empty for now -->
+<div class="slide" id="expr-slide"><h2>Expressions</h2></div>
+<div class="slide" id="sent-slide"><h2>Sentences</h2></div>
+<div class="slide" id="para-slide"><h2>Paragraphs</h2></div>
+<div class="slide" id="list-slide"><h2>Lists</h2></div>
+
+<!-- Black strip always at bottom -->
+<div class="black-strip" onclick="goBack()">
+  <span class="arrow">←</span>
+  <span class="back-label">Back</span>
+</div>
+
+<script>
+// Slide navigation
+document.querySelectorAll('.card').forEach(card => {
+  card.addEventListener('click', () => {
+    document.getElementById('main-menu').style.display = 'none';
+    document.getElementById(card.dataset.slide).classList.add('active');
+  });
+});
+function goBack() {
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.getElementById('main-menu').style.display = 'block';
+}
+
+// Synonym fetcher
+async function getSynonyms(type) {
+  let input = document.getElementById(`${type}-input`).value.trim();
+  let resultsDiv = document.getElementById(`${type}-results`);
+  // Validation
+  if (!input) {
+    resultsDiv.innerHTML = "<em>Please type a word.</em>";
+    return;
+  }
+  if (input.length > 30) {
+    resultsDiv.innerHTML = "<em>Word too long (max 30 characters).</em>";
+    return;
+  }
+  if (!/^[a-zA-Z\\s\\-']+$/.test(input)) {
+    resultsDiv.innerHTML = "<em>Use letters, spaces, hyphens, or apostrophes only.</em>";
+    return;
+  }
+  input = input.toLowerCase();
+  resultsDiv.innerHTML = "<em>Loading...</em>";
+  try {
+    const resp = await fetch('https://api.dictionaryapi.dev/api/v2/entries/en/' + encodeURIComponent(input));
+    if (!resp.ok) {
+      resultsDiv.innerHTML = `<em>No results found for “${input}”.</em>`;
+      return;
+    }
+    const data = await resp.json();
+    let allSyns = [];
+    let allExamples = [];
+    data.forEach(entry => {
+      entry.meanings.forEach(m => {
+        if (Array.isArray(m.definitions)) {
+          m.definitions.forEach(def => {
+            if (def.synonyms) {
+              allSyns.push(...def.synonyms);
+            }
+            if (def.example) {
+              allExamples.push(def.example);
+            }
+          });
+        }
+      });
+    });
+    // Get unique synonyms and limit to 10
+    let uniqSyns = [...new Set(allSyns)].slice(0, 10);
+    if (uniqSyns.length === 0) {
+      resultsDiv.innerHTML = `<em>No synonyms found for “${input}”.</em>`;
+      return;
+    }
+    let output = '';
+    for (let i = 0; i < uniqSyns.length; ++i) {
+      let syn = uniqSyns[i];
+      // Try to find an example sentence using the synonym, fallback to input example if not available
+      let sent = allExamples.find(e => 
+        new RegExp(`\\b${syn}\\b`).test(e)
+      );
+      if (!sent) sent = allExamples[i] || `No example sentence found.`;
+      // Trim sentence to max 20 words if needed
+      let w = sent.split(/\\s+/);
+      if (w.length > 20) sent = w.slice(0,20).join(' ') + '…';
+      output += `<strong>${syn}</strong> – ${sent}<br><br>`;
+    }
+    resultsDiv.innerHTML = output;
+  } catch(err) {
+    resultsDiv.innerHTML = "<em>Error fetching data. Please try again.</em>";
+  }
+}
+</script>
+</body>
+</html>
